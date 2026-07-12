@@ -3,7 +3,7 @@
 TikTok Downloader — macOS Desktop App
 Descarga videos de TikTok con yt-dlp y transcribe audio con Whisper.
 """
-import os, sys, subprocess, threading, json, urllib.request, urllib.error, ssl
+import os, sys, subprocess, threading, json, urllib.request, urllib.error, ssl, shutil
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from pathlib import Path
@@ -13,7 +13,7 @@ WHISPER_MODEL = "base"
 APP_NAME = "TikTok Downloader"
 APP_VERSION = "1.2"
 DEFAULT_DOWNLOAD_DIR = str(Path.home() / "Downloads" / "TikTok Downloads")
-FFMPEG_LOCATION = "/opt/homebrew/bin"
+FFMPEG_LOCATION = os.environ.get("FFMPEG_LOCATION") or shutil.which("ffmpeg") or "/opt/homebrew/bin"
 
 # Paquetes pip a monitorear: (nombre_pip, nombre_import, pypi_name)
 PIP_PACKAGES = [
@@ -21,6 +21,29 @@ PIP_PACKAGES = [
     ("openai-whisper",   "whisper",   "openai-whisper"),
     ("curl_cffi",        "curl_cffi", "curl-cffi"),
 ]
+
+def _detect_best_impersonate():
+    """Detecta el mejor target de impersonacion disponible."""
+    try:
+        out = subprocess.check_output(
+            ["yt-dlp", "--list-impersonate-targets"],
+            stderr=subprocess.STDOUT, text=True, timeout=10
+        )
+        for line in out.split("\n"):
+            if "Chrome-" in line and ("Macos" in line or "macos" in line):
+                parts = line.strip().split()
+                if parts:
+                    return parts[0]
+        for line in out.split("\n"):
+            if "Chrome-" in line:
+                parts = line.strip().split()
+                if parts:
+                    return parts[0]
+    except Exception:
+        pass
+    return "Chrome-146:Macos-26"
+
+IMPERSONATE_TARGET = _detect_best_impersonate()
 
 # ── Helpers ──
 
@@ -120,7 +143,7 @@ def download_video(url, output_dir, log_widget, btn_widget, status_label):
         # Attempt 1: con impersonate
         cmd = ["yt-dlp", "-f", "bv*+ba/b", "--merge-output-format", "mp4",
                "--embed-thumbnail", "--embed-metadata",
-               "--impersonate", "Chrome-146:Macos-26",
+               "--impersonate", IMPERSONATE_TARGET,
                "--ffmpeg-location", FFMPEG_LOCATION,
                "-o", os.path.join(output_dir, "%(title)s.%(ext)s"),
                "--no-playlist", "--print", "filename", url]
@@ -172,7 +195,7 @@ def transcribe_video(url, output_dir, log_widget, btn_widget, status_label, mode
             log_append(log_widget, "Descargando audio...")
 
             def _try_download(with_impersonate):
-                extra = ["--impersonate", "Chrome-146:Macos-26"] if with_impersonate else []
+                extra = ["--impersonate", IMPERSONATE_TARGET] if with_impersonate else []
                 return run_cmd(
                     ["yt-dlp", "-x", "--audio-format", "wav", "--audio-quality", "0",
                      "--ffmpeg-location", FFMPEG_LOCATION]
@@ -534,7 +557,7 @@ class TikTokDownloaderApp:
             APP_NAME + " v" + APP_VERSION + "\n\n"
             "Descarga videos de TikTok y transcribe su audio.\n\n"
             "Motor: yt-dlp + Whisper (OpenAI)\n"
-            "Hecho para Dr. Walter Garcia - Julio 2026")
+            "Hecho para uso medico - Julio 2026")
 
     def run(self):
         self.root.mainloop()

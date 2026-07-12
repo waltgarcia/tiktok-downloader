@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+venv/
+*.egg
+
+# macOS
+.DS_Store
+*.icns
+
+# IDE
+.vscode/
+.idea/
+
+# Downloads
+*.mp4
+*.wav
+*.txt
+TikTok Downloads/
+
+# Environment
+.env
+*.local
