@@ -2,7 +2,8 @@
 
 Aplicación de escritorio para macOS que descarga videos de TikTok y transcribe su audio a texto usando inteligencia artificial.
 
-Hecha por y para el Dr. Walter García Ortiz — Monterrey, México.
+Hecha por Walter García Ortiz.
+Contacto: walter.garciaortiz@gmail.com
 
 ---
 
@@ -166,7 +167,6 @@ Uso personal y educativo.
 
 ---
 
-**Dr. Walter García Ortiz**  
-Cédula 11466818 — Médico Cirujano y Partero  
-Gral. Plutarco Elías Calles 609, Guadalupe, N.L.  
+**Walter García Ortiz**
+Contacto: walter.garciaortiz@gmail.com
 Julio 2026
