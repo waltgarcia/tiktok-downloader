@@ -2,9 +2,6 @@
 
 Aplicación de escritorio para macOS que descarga videos de TikTok y transcribe su audio a texto usando inteligencia artificial.
 
-Hecha por Walter García Ortiz.
-Contacto: walter.garciaortiz@gmail.com
-
 ---
 
 ## Funcionalidades
@@ -168,5 +165,5 @@ Uso personal y educativo.
 ---
 
 **Walter García Ortiz**
-Contacto: walter.garciaortiz@gmail.com
+Comentarios y sugerencias: walter.garciaortiz@gmail.com
 Julio 2026
